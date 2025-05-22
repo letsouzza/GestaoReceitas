@@ -42,7 +42,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import br.senai.sp.jandira.foodrecipe.R
+import br.senai.sp.jandira.foodrecipe.model.ResponsePost
+import br.senai.sp.jandira.foodrecipe.service.RetrofitFactory
 import br.senai.sp.jandira.foodrecipe.ui.theme.poppinsFamily
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun CadastroPessoa(
@@ -60,6 +65,23 @@ fun CadastroPessoa(
     var keywordState = remember {
         mutableStateOf("")
     }
+
+    val user= mapOf(
+        "nome" to nameState.value,
+        "email" to emailState.value,
+        "senha" to passwordState.value,
+        "palavra_chave" to keywordState.value
+    )
+
+    var sendUser = RetrofitFactory()
+        .getUserRegisterService()
+        .insertUser()
+
+    sendUser.enqueue(object : Callback<ResponsePost>{
+        override fun onResponse(p0: Call<ResponsePost>, p1: Response<ResponsePost>) {
+            TODO("Not yet implemented")
+        }
+    })
 
     Box(
         modifier = Modifier
