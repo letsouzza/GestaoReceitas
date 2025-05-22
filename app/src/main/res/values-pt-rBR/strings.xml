@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Gestão de Receitas</string>
+    <string name="register">Cadastre-se</string>
+    <string name="name">Nome:</string>
+    <string name="email">Email:</string>
+    <string name="password">Senha:</string>
+    <string name="keyword">Palavra de Recuperação:</string>
+    <string name="have_login">Já tem um</string>
+    <string name="login">Login</string>
+    <string name="message_receipe">Venha conferir as melhores receitas!</string>
+    <string name="forgot_password">Esqueceu sua senha?</string>
+    <string name="no_account">Não tem uma conta?</string>
+
+</resources>

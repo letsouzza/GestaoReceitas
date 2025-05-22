@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">FoodRecipe</string>
+    <string name="register">Register</string>
+    <string name="name">Name:</string>
+    <string name="email">Email:</string>
+    <string name="password">Password:</string>
+    <string name="keyword">Keyword:</string>
+    <string name="have_login">Already have a</string>
+    <string name="login">Login</string>
+    <string name="message_receipe">Come check out the best recipes!</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="no_account">Don\'t have an account?</string>
+</resources>
