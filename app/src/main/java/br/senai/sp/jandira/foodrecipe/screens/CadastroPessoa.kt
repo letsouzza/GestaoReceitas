@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.foodrecipe.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import br.senai.sp.jandira.foodrecipe.R
 import br.senai.sp.jandira.foodrecipe.model.ResponsePost
+import br.senai.sp.jandira.foodrecipe.model.UserRegister
 import br.senai.sp.jandira.foodrecipe.service.RetrofitFactory
 import br.senai.sp.jandira.foodrecipe.ui.theme.poppinsFamily
 import retrofit2.Call
@@ -65,23 +67,6 @@ fun CadastroPessoa(
     var keywordState = remember {
         mutableStateOf("")
     }
-
-    val user= mapOf(
-        "nome" to nameState.value,
-        "email" to emailState.value,
-        "senha" to passwordState.value,
-        "palavra_chave" to keywordState.value
-    )
-
-    var sendUser = RetrofitFactory()
-        .getUserRegisterService()
-        .insertUser()
-
-    sendUser.enqueue(object : Callback<ResponsePost>{
-        override fun onResponse(p0: Call<ResponsePost>, p1: Response<ResponsePost>) {
-            TODO("Not yet implemented")
-        }
-    })
 
     Box(
         modifier = Modifier
@@ -143,7 +128,9 @@ fun CadastroPessoa(
                             unfocusedContainerColor = Color(0x85715F3E),
                             focusedContainerColor = Color(0x85715F3E),
                             unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent
+                            focusedBorderColor = Color.Transparent,
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
                         ),
                         shape = RoundedCornerShape(60.dp),
                         leadingIcon = {
@@ -179,7 +166,9 @@ fun CadastroPessoa(
                             unfocusedContainerColor = Color(0x85715F3E),
                             focusedContainerColor = Color(0x85715F3E),
                             unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent
+                            focusedBorderColor = Color.Transparent,
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
                         ),
                         shape = RoundedCornerShape(60.dp),
                         leadingIcon = {
@@ -215,7 +204,9 @@ fun CadastroPessoa(
                             unfocusedContainerColor = Color(0x85715F3E),
                             focusedContainerColor = Color(0x85715F3E),
                             unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent
+                            focusedBorderColor = Color.Transparent,
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
                         ),
                         shape = RoundedCornerShape(60.dp),
                         leadingIcon = {
@@ -234,7 +225,7 @@ fun CadastroPessoa(
                                 ),
                                 fontSize = 20.sp,
                                 fontFamily = poppinsFamily,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         modifier = Modifier
@@ -251,7 +242,9 @@ fun CadastroPessoa(
                             unfocusedContainerColor = Color(0x85715F3E),
                             focusedContainerColor = Color(0x85715F3E),
                             unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent
+                            focusedBorderColor = Color.Transparent,
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
                         ),
                         shape = RoundedCornerShape(60.dp),
                         leadingIcon = {
@@ -279,7 +272,42 @@ fun CadastroPessoa(
                             .padding(top = 25.dp)
                     )
                     Button(
-                        onClick = {},
+                        onClick = {
+                            val body = UserRegister(
+                                nome = nameState.value,
+                                email = emailState.value,
+                                senha = passwordState.value,
+                                palavraChave = keywordState.value
+                            )
+
+                            var sendUser = RetrofitFactory()
+                                .getUserRegisterService()
+                                .insertUser(body)
+
+                            sendUser.enqueue(object : Callback<ResponsePost> {
+                                override fun onResponse(
+                                    p0: Call<ResponsePost>,
+                                    p1: Response<ResponsePost>
+                                ) {
+                                    TODO("Not yet implemented")
+                                }
+
+                                override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
+                                    TODO("Not yet implemented")
+                                }
+
+                            })
+
+//                            sendUser.enqueue(object : Callback<ResponsePost>{
+//                                override fun onResponse(p0: Call<ResponsePost>, p1: Response<ResponsePost>) {
+//                                    Log.e("Implemented" , "Sucess")
+//                                }
+//
+//                                override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
+//                                    Log.e(" No Implemented" , "Error")
+//                                }
+//                            })
+                        },
                         modifier = Modifier
                             .padding(horizontal = 10.dp)
                             .padding(top = 60.dp)

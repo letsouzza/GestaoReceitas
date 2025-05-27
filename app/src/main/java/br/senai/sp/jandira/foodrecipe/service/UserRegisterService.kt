@@ -10,5 +10,4 @@ interface UserRegisterService {
 
     @POST("usuario")
     fun insertUser(@Body user: UserRegister): Call<ResponsePost>
-
 }
