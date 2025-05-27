@@ -21,11 +21,14 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -39,6 +42,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,6 +63,8 @@ import retrofit2.Response
 fun LoginPessoa(
     navegacao: NavHostController?
 ){
+    val senhaVisivel = remember { mutableStateOf(false) }
+
     var emailState = remember {
         mutableStateOf("")
     }
@@ -175,6 +182,20 @@ fun LoginPessoa(
                                     .size(30.dp)
                             )
                         },
+                        trailingIcon = {
+                            val icon = if (senhaVisivel.value) Icons.Default.Visibility else Icons.Default.VisibilityOff
+
+                            IconButton(onClick = { senhaVisivel.value = !senhaVisivel.value }) {
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = "",
+                                    tint = Color.White
+                                )
+                            }
+                        },
+                        visualTransformation =
+                            if (senhaVisivel.value) VisualTransformation.None
+                            else PasswordVisualTransformation(),
                         label = {
                             Text(
                                 text = stringResource(

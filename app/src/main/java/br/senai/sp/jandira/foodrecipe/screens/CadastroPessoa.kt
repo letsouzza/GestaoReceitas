@@ -21,15 +21,19 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,6 +44,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,6 +65,8 @@ fun CadastroPessoa(
     navegacao: NavHostController?
 ){
     val context = LocalContext.current
+
+    val senhaVisivel = remember { mutableStateOf(false) }
 
     var nameState = remember {
         mutableStateOf("")
@@ -144,7 +152,7 @@ fun CadastroPessoa(
                                 contentDescription = "",
                                 tint = Color.White,
                                 modifier = Modifier
-                                    .size(30.dp)
+                                    .size(25.dp)
                             )
                         },
                         label = {
@@ -182,7 +190,7 @@ fun CadastroPessoa(
                                 contentDescription = "",
                                 tint = Color.White,
                                 modifier = Modifier
-                                    .size(30.dp)
+                                    .size(25.dp)
                             )
                         },
                         label = {
@@ -220,21 +228,23 @@ fun CadastroPessoa(
                                 contentDescription = "",
                                 tint = Color.White,
                                 modifier = Modifier
-                                    .size(30.dp)
+                                    .size(25.dp)
                             )
                         },
-//                        trailingIcon = {
-//                            val icon = if (senhaVisivel) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
-//                            val descricao = if (senhaVisivel) "Ocultar senha" else "Mostrar senha"
-//
-//                            IconButton(onClick = { senhaVisivel = !senhaVisivel }) {
-//                                Icon(
-//                                    imageVector = icon,
-//                                    contentDescription = descricao,
-//                                    tint = Color.White
-//                                )
-//                            }
-//                        },
+                        trailingIcon = {
+                            val icon = if (senhaVisivel.value) Icons.Default.Visibility else Icons.Default.VisibilityOff
+
+                            IconButton(onClick = { senhaVisivel.value = !senhaVisivel.value }) {
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = "",
+                                    tint = Color.White
+                                )
+                            }
+                        },
+                        visualTransformation =
+                            if (senhaVisivel.value) VisualTransformation.None
+                            else PasswordVisualTransformation(),
                         label = {
                             Text(
                                 text = stringResource(
@@ -245,9 +255,6 @@ fun CadastroPessoa(
                                 color = Color.White,
                             )
                         },
-//                        visualTransformation =
-//                            if (senhaVisivel) VisualTransformation.None
-//                            else PasswordVisualTransformation(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp)
@@ -273,9 +280,23 @@ fun CadastroPessoa(
                                 contentDescription = "",
                                 tint = Color.White,
                                 modifier = Modifier
-                                    .size(30.dp)
+                                    .size(25.dp)
                             )
                         },
+                        trailingIcon = {
+                            val icon = if (senhaVisivel.value) Icons.Default.Visibility else Icons.Default.VisibilityOff
+
+                            IconButton(onClick = { senhaVisivel.value = !senhaVisivel.value }) {
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = "",
+                                    tint = Color.White
+                                )
+                            }
+                        },
+                        visualTransformation =
+                            if (senhaVisivel.value) VisualTransformation.None
+                            else PasswordVisualTransformation(),
                         label = {
                             Text(
                                 text = stringResource(
