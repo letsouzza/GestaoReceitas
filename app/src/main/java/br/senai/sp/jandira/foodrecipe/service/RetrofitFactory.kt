@@ -5,16 +5,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitFactory {
 
-//    private val BASE_URL = "http://10.107.134.31:8080/v1/controle-receitas/"
+    private val BASE_URL = "http://10.107.134.31:8080/v1/controle-receitas/"
 
     private val RETROFIT_FACTORY = Retrofit
         .Builder()
-        .baseUrl("http://10.107.134.31:8080/v1/controle-receitas/")
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    fun getUserRegisterService() : UserRegisterService{
+    fun getUserRegisterService() : UserService{
         return RETROFIT_FACTORY
-            .create(UserRegisterService::class.java)
+            .create(UserService::class.java)
     }
 }

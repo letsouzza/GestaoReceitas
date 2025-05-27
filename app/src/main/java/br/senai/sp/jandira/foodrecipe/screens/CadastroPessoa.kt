@@ -328,7 +328,6 @@ fun CadastroPessoa(
                                 override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
                                     Log.e("Erro", "Não foi possível cadastrar")
                                 }
-
                             })
                         },
                         modifier = Modifier

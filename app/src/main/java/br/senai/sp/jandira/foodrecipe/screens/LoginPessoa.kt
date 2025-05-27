@@ -1,5 +1,7 @@
 package br.senai.sp.jandira.foodrecipe.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +30,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,13 +44,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import br.senai.sp.jandira.foodrecipe.R
+import br.senai.sp.jandira.foodrecipe.model.ResponsePost
+import br.senai.sp.jandira.foodrecipe.model.UserLogin
+import br.senai.sp.jandira.foodrecipe.model.UserRegister
+import br.senai.sp.jandira.foodrecipe.service.RetrofitFactory
 import br.senai.sp.jandira.foodrecipe.ui.theme.antonscFamily
 import br.senai.sp.jandira.foodrecipe.ui.theme.poppinsFamily
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun LoginPessoa(
     navegacao: NavHostController?
 ){
+    var emailState = remember {
+        mutableStateOf("")
+    }
+    var passwordState = remember {
+        mutableStateOf("")
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -105,8 +123,8 @@ fun LoginPessoa(
                         )
                     }
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = emailState.value,
+                        onValueChange = {emailState.value = it},
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedContainerColor = Color(0x85715F3E),
                             focusedContainerColor = Color(0x85715F3E),
@@ -139,8 +157,8 @@ fun LoginPessoa(
                             .padding(top = 70.dp)
                     )
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = passwordState.value,
+                        onValueChange = { passwordState.value = it },
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedContainerColor = Color(0x85715F3E),
                             focusedContainerColor = Color(0x85715F3E),
@@ -183,7 +201,31 @@ fun LoginPessoa(
                             .padding(start = 120.dp, top = 10.dp),
                     )
                     Button(
-                        onClick = {},
+                        onClick = {
+                            val body = UserLogin(
+                                email = emailState.value,
+                                senha = passwordState.value
+                            )
+//
+                            val loginUser = RetrofitFactory()
+                                .getUserRegisterService()
+                                .loginUser(body)
+
+                            loginUser.enqueue(object : Callback<ResponsePost>{
+                                override fun onResponse(
+                                    call: Call<ResponsePost>,
+                                    response: Response<ResponsePost>
+                                ) {
+                                    navegacao?.navigate("home")
+                                    Log.d("Sucess" , "Concluído")
+                                }
+
+                                override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
+                                    Log.d("Erro" , "Erro")
+                                }
+
+                            })
+                        },
                         modifier = Modifier
                             .padding(horizontal = 10.dp)
                             .padding(top = 80.dp)
