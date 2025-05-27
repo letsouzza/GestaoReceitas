@@ -1,6 +1,7 @@
 package br.senai.sp.jandira.foodrecipe.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,10 +53,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 @Composable
 fun CadastroPessoa(
     navegacao: NavHostController?
 ){
+    val context = LocalContext.current
+
     var nameState = remember {
         mutableStateOf("")
     }
@@ -218,6 +223,18 @@ fun CadastroPessoa(
                                     .size(30.dp)
                             )
                         },
+//                        trailingIcon = {
+//                            val icon = if (senhaVisivel) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
+//                            val descricao = if (senhaVisivel) "Ocultar senha" else "Mostrar senha"
+//
+//                            IconButton(onClick = { senhaVisivel = !senhaVisivel }) {
+//                                Icon(
+//                                    imageVector = icon,
+//                                    contentDescription = descricao,
+//                                    tint = Color.White
+//                                )
+//                            }
+//                        },
                         label = {
                             Text(
                                 text = stringResource(
@@ -228,6 +245,9 @@ fun CadastroPessoa(
                                 color = Color.White,
                             )
                         },
+//                        visualTransformation =
+//                            if (senhaVisivel) VisualTransformation.None
+//                            else PasswordVisualTransformation(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp)
@@ -280,33 +300,36 @@ fun CadastroPessoa(
                                 palavraChave = keywordState.value
                             )
 
-                            var sendUser = RetrofitFactory()
+                            val sendUser = RetrofitFactory()
                                 .getUserRegisterService()
                                 .insertUser(body)
 
                             sendUser.enqueue(object : Callback<ResponsePost> {
                                 override fun onResponse(
-                                    p0: Call<ResponsePost>,
-                                    p1: Response<ResponsePost>
+                                    call: Call<ResponsePost>,
+                                    response: Response<ResponsePost>
                                 ) {
-                                    TODO("Not yet implemented")
+                                    navegacao?.navigate("login")
+                                    if (response.isSuccessful) {
+                                        Toast.makeText(
+                                            context,
+                                            "Cadastro OK: ${response.body()?.message}",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "Erro no servidor: código ${response.code()}",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
                                 }
 
                                 override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
-                                    TODO("Not yet implemented")
+                                    Log.e("Erro", "Não foi possível cadastrar")
                                 }
 
                             })
-
-//                            sendUser.enqueue(object : Callback<ResponsePost>{
-//                                override fun onResponse(p0: Call<ResponsePost>, p1: Response<ResponsePost>) {
-//                                    Log.e("Implemented" , "Sucess")
-//                                }
-//
-//                                override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
-//                                    Log.e(" No Implemented" , "Error")
-//                                }
-//                            })
                         },
                         modifier = Modifier
                             .padding(horizontal = 10.dp)
