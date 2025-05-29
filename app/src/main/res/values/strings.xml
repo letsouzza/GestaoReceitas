@@ -10,4 +10,17 @@
     <string name="message_receipe">Come check out the best recipes!</string>
     <string name="forgot_password">Forgot your password?</string>
     <string name="no_account">Don\'t have an account?</string>
+    <string name="register_receipe">Register Recipe</string>
+    <string name="firt_step">1st Step - Register the basic information of the recipe</string>
+    <string name="second_step">2nd Step - Register the ingredients and category</string>
+    <string name="third_step">3rd Step - Register the preparation method and image</string>
+    <string name="name_receipe">Recipe Name:</string>
+    <string name="description">Description:</string>
+    <string name="time">Preparation Time:</string>
+    <string name="porcoes">Servings:</string>
+    <string name="image_receipe">Image</string>
+    <string name="ingredients">Ingredients:</string>
+    <string name="preparation_method">Preparation Method:</string>
+    <string name="dificulty_level">Difficulty Level</string>
+    <string name="category">Categories</string>
 </resources>

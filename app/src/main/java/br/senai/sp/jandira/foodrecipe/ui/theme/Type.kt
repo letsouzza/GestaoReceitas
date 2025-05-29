@@ -21,6 +21,20 @@ val antonscFamily = FontFamily(
 val gorditasFamily = FontFamily(
     Font(R.font.gorditas_regular, FontWeight.Normal)
 )
+val podkovaFamily = FontFamily(
+    Font(R.font.podkova_bold, FontWeight.Bold),
+    Font(R.font.podkova_medium, FontWeight.Medium),
+    Font(R.font.podkova_regular, FontWeight.Normal),
+    Font(R.font.podkova_semibold, FontWeight.SemiBold),
+    Font(R.font.podkova_extrabold, FontWeight.ExtraBold)
+)
+val rethinkFamily = FontFamily(
+    Font(R.font.rethinksans_bold, FontWeight.Bold),
+    Font(R.font.rethinksans_medium, FontWeight.Medium),
+    Font(R.font.rethinksans_regular, FontWeight.Normal),
+    Font(R.font.rethinksans_semibold, FontWeight.SemiBold),
+    Font(R.font.rethinksans_extrabold, FontWeight.ExtraBold)
+)
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Gestão de Receitas</string>
-    <string name="register">Cadastre-se</string>
+    <string name="register">Cadastrar</string>
     <string name="name">Nome:</string>
     <string name="email">Email:</string>
     <string name="password">Senha:</string>
@@ -10,5 +10,17 @@
     <string name="message_receipe">Venha conferir as melhores receitas!</string>
     <string name="forgot_password">Esqueceu sua senha?</string>
     <string name="no_account">Não tem uma conta?</string>
-
+    <string name="register_receipe">Cadastrar Receita</string>
+    <string name="firt_step">1º Passo- Cadastre as informações básicas da receita</string>
+    <string name="second_step">2º Passo- Cadastre os ingredientes e categoria</string>
+    <string name="third_step">3º Passo- Cadastre o modo de preparo e imagem </string>
+    <string name="name_receipe">Nome da Receita:</string>
+    <string name="description">Descrição:</string>
+    <string name="time">Tempo de Preparo:</string>
+    <string name="porcoes">Porções:</string>
+    <string name="image_receipe">Imagem</string>
+    <string name="ingredients">Ingredientes:</string>
+    <string name="preparation_method">Modo de Preparo:</string>
+    <string name="dificulty_level">Nível de Dificuldade</string>
+    <string name="category">Categorias</string>
 </resources>
