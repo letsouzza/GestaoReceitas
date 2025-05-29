@@ -18,6 +18,9 @@ val poppinsFamily = FontFamily(
 val antonscFamily = FontFamily(
     Font(R.font.antonsc_regular, FontWeight.Normal)
 )
+val gorditasFamily = FontFamily(
+    Font(R.font.gorditas_regular, FontWeight.Normal)
+)
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(

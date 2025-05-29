@@ -67,6 +67,7 @@ fun CadastroPessoa(
     val context = LocalContext.current
 
     val senhaVisivel = remember { mutableStateOf(false) }
+    val palavraVisivel = remember { mutableStateOf(false) }
 
     var nameState = remember {
         mutableStateOf("")
@@ -284,9 +285,9 @@ fun CadastroPessoa(
                             )
                         },
                         trailingIcon = {
-                            val icon = if (senhaVisivel.value) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                            val icon = if (palavraVisivel.value) Icons.Default.Visibility else Icons.Default.VisibilityOff
 
-                            IconButton(onClick = { senhaVisivel.value = !senhaVisivel.value }) {
+                            IconButton(onClick = { palavraVisivel.value = !palavraVisivel.value }) {
                                 Icon(
                                     imageVector = icon,
                                     contentDescription = "",
@@ -295,7 +296,7 @@ fun CadastroPessoa(
                             }
                         },
                         visualTransformation =
-                            if (senhaVisivel.value) VisualTransformation.None
+                            if (palavraVisivel.value) VisualTransformation.None
                             else PasswordVisualTransformation(),
                         label = {
                             Text(

@@ -17,12 +17,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowCircleRight
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -52,6 +55,7 @@ import br.senai.sp.jandira.foodrecipe.R
 import br.senai.sp.jandira.foodrecipe.model.ResponsePost
 import br.senai.sp.jandira.foodrecipe.model.UserLogin
 import br.senai.sp.jandira.foodrecipe.model.UserRegister
+import br.senai.sp.jandira.foodrecipe.screens.components.DialogWelcome
 import br.senai.sp.jandira.foodrecipe.service.RetrofitFactory
 import br.senai.sp.jandira.foodrecipe.ui.theme.antonscFamily
 import br.senai.sp.jandira.foodrecipe.ui.theme.poppinsFamily
@@ -63,7 +67,10 @@ import retrofit2.Response
 fun LoginPessoa(
     navegacao: NavHostController?
 ){
+
     val senhaVisivel = remember { mutableStateOf(false) }
+
+    val openAlertDialog = remember { mutableStateOf(false) }
 
     var emailState = remember {
         mutableStateOf("")
@@ -136,7 +143,9 @@ fun LoginPessoa(
                             unfocusedContainerColor = Color(0x85715F3E),
                             focusedContainerColor = Color(0x85715F3E),
                             unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent
+                            focusedBorderColor = Color.Transparent,
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
                         ),
                         shape = RoundedCornerShape(60.dp),
                         leadingIcon = {
@@ -170,7 +179,9 @@ fun LoginPessoa(
                             unfocusedContainerColor = Color(0x85715F3E),
                             focusedContainerColor = Color(0x85715F3E),
                             unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent
+                            focusedBorderColor = Color.Transparent,
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
                         ),
                         shape = RoundedCornerShape(60.dp),
                         leadingIcon = {
@@ -237,10 +248,8 @@ fun LoginPessoa(
                                     call: Call<ResponsePost>,
                                     response: Response<ResponsePost>
                                 ) {
-                                    navegacao?.navigate("home")
-                                    Log.d("Sucess" , "Concluído")
+                                    openAlertDialog.value = true
                                 }
-
                                 override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
                                     Log.d("Erro" , "Erro")
                                 }
@@ -258,6 +267,16 @@ fun LoginPessoa(
                             fontSize = 30.sp,
                             fontFamily = poppinsFamily,
                             color = Color(0xFF241508)
+                        )
+                    }
+                    if (openAlertDialog.value) {
+                        DialogWelcome(
+                            onDismissRequest = { openAlertDialog.value = false },
+                            onNavigate = {navegacao?.navigate("home")},
+                            dialogTitle = "BEM VINDO!",
+                            dialogText = "Este é o lugar ideal para aprender novas comidas, explorar sabores e descobrir dicas práticas para se destacar na cozinha.",
+                            dialogTextSpecial = "Aproveite e inspire-se!",
+                            icon = Icons.Default.ArrowCircleRight
                         )
                     }
                     Row(
