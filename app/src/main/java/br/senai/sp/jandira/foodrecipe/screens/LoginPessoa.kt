@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -99,11 +100,7 @@ fun LoginPessoa(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(vertical = 43.dp, horizontal = 23.dp),
-                colors = CardDefaults.cardColors(Color(0xCC241508)),
-                border = BorderStroke(
-                    width = 0.5.dp,
-                    color = Color(0xFFFFFFFF)
-                )
+                colors = CardDefaults.cardColors(Color(0xCC241508))
             ){
                 Column(
                     modifier = Modifier
@@ -175,13 +172,12 @@ fun LoginPessoa(
                     OutlinedTextField(
                         value = passwordState.value,
                         onValueChange = { passwordState.value = it },
+                        textStyle = TextStyle(color = Color.White), // força cor branca
                         colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = Color(0x85715F3E),
-                            focusedContainerColor = Color(0x85715F3E),
+                            unfocusedContainerColor = Color(0xFF715F3E),
+                            focusedContainerColor = Color(0xFF715F3E),
                             unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
+                            focusedBorderColor = Color.Transparent
                         ),
                         shape = RoundedCornerShape(60.dp),
                         leadingIcon = {
@@ -272,7 +268,7 @@ fun LoginPessoa(
                     if (openAlertDialog.value) {
                         DialogWelcome(
                             onDismissRequest = { openAlertDialog.value = false },
-                            onNavigate = {navegacao?.navigate("home")},
+                            onNavigate = {navegacao?.navigate("cadastroReceita")},
                             dialogTitle = "BEM VINDO!",
                             dialogText = "Este é o lugar ideal para aprender novas comidas, explorar sabores e descobrir dicas práticas para se destacar na cozinha.",
                             dialogTextSpecial = "Aproveite e inspire-se!",

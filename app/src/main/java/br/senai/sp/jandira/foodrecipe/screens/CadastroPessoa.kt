@@ -102,11 +102,7 @@ fun CadastroPessoa(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(vertical = 43.dp, horizontal = 23.dp),
-                colors = CardDefaults.cardColors(Color(0xCC241508)),
-                border = BorderStroke(
-                    width = 0.5.dp,
-                    color = Color(0xFFFFFFFF)
-                )
+                colors = CardDefaults.cardColors(Color(0xCC241508))
             ){
                 Column(
                     modifier = Modifier

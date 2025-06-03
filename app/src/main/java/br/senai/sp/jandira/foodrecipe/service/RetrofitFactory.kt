@@ -5,7 +5,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitFactory {
 
-    private val BASE_URL = "http://10.107.144.11:8080/v1/controle-receitas/"
+    // IP Mac- 10.107.144.11
+    // IP Windows- 10.107.134.31
+
+    private val BASE_URL = "http://10.107.134.31:8080/v1/controle-receitas/"
 
     private val RETROFIT_FACTORY = Retrofit
         .Builder()
@@ -16,5 +19,11 @@ class RetrofitFactory {
     fun getUserRegisterService() : UserService{
         return RETROFIT_FACTORY
             .create(UserService::class.java)
+    }
+
+    fun getLevelService() : ReceipeService{
+        return RETROFIT_FACTORY
+            .create(CharacterService::class.java)
+        // Criar o serviço
     }
 }

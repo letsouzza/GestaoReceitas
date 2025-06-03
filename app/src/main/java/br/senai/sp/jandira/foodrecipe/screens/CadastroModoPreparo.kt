@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,10 +18,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Fastfood
-import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -45,66 +48,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import br.senai.sp.jandira.foodrecipe.R
-import br.senai.sp.jandira.foodrecipe.model.DifficultLevel
-import br.senai.sp.jandira.foodrecipe.model.ResultLevel
-import br.senai.sp.jandira.foodrecipe.service.RetrofitFactory
 import br.senai.sp.jandira.foodrecipe.ui.theme.podkovaFamily
 import br.senai.sp.jandira.foodrecipe.ui.theme.poppinsFamily
 import br.senai.sp.jandira.foodrecipe.ui.theme.rethinkFamily
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 @Composable
-fun CadastroReceita(
+fun CadastroModoPreparo(
     navegacao: NavHostController?
-) {
-
-    var levelList = remember {
-        mutableStateOf(listOf<DifficultLevel>())
-    }
-
-    // Obter um Retrofit Factory
-    var callLevel = RetrofitFactory()
-        .getLevelService()
-        .listLevel()
-
-    // Enviar a requisição
-    // enqueue- enviar
-    // Retorna um Result
-    callLevel.enqueue(object : Callback<ResultLevel> {
-        override fun onResponse(p0: Call<ResultLevel>, response: Response<ResultLevel>) {
-            levelList.value = response.body()!!.resultLevel
-        }
-
-        override fun onFailure(p0: Call<ResultLevel>, p1: Throwable) {
-            TODO("Not yet implemented")
-        }
-
-    })
-
+){
     val expandedMenu = remember { mutableStateOf(false) }
     val expandedDificuldade = remember { mutableStateOf(false) }
 
-    var nameRecipeState = remember {
+    var preparationState = remember {
         mutableStateOf("")
     }
-    var descriptionState = remember {
-        mutableStateOf("")
-    }
-    var timeState = remember {
-        mutableStateOf("")
-    }
-    var porcoesState = remember {
-        mutableStateOf("")
-    }
-    var levelState = remember {
+    var imageState = remember {
         mutableStateOf("")
     }
 
     val context = LocalContext.current
     val userFile = context.getSharedPreferences("user_file", Context.MODE_PRIVATE)
     val editor = userFile.edit()
+
 
     Box(
         modifier = androidx.compose.ui.Modifier
@@ -203,7 +168,7 @@ fun CadastroReceita(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.firt_step),
+                    text = stringResource(R.string.third_step),
                     fontSize = 20.sp,
                     fontFamily = podkovaFamily,
                     fontWeight = FontWeight.Bold,
@@ -211,36 +176,8 @@ fun CadastroReceita(
                     modifier = Modifier.padding(top = 25.dp, start = 30.dp)
                 )
                 OutlinedTextField(
-                    value = nameRecipeState.value,
-                    onValueChange = { nameRecipeState.value = it },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0x80241508),
-                        focusedContainerColor = Color(0x80241508),
-                        unfocusedBorderColor = Color(0xFF261C09),
-                        focusedBorderColor = Color(0xFF261C09),
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(35.dp),
-                    label = {
-                        Text(
-                            text = stringResource(
-                                R.string.name_receipe
-                            ),
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 20.sp,
-                            fontFamily = poppinsFamily,
-                            color = Color.White
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                        .padding(top = 35.dp)
-                )
-                OutlinedTextField(
-                    value = descriptionState.value,
-                    onValueChange = { descriptionState.value = it},
+                    value = preparationState.value,
+                    onValueChange = { preparationState.value = it},
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = Color(0x80241508),
                         focusedContainerColor = Color(0x80241508),
@@ -253,7 +190,7 @@ fun CadastroReceita(
                     label = {
                         Text(
                             text = stringResource(
-                                R.string.description
+                                R.string.preparation_method
                             ),
                             fontWeight = FontWeight.Medium,
                             fontSize = 20.sp,
@@ -263,69 +200,13 @@ fun CadastroReceita(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(130.dp)
+                        .height(330.dp)
                         .padding(horizontal = 10.dp)
-                        .padding(top = 15.dp)
+                        .padding(top = 50.dp)
                 )
                 OutlinedTextField(
-                    value = timeState.value,
-                    onValueChange = { timeState.value = it },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0x80241508),
-                        focusedContainerColor = Color(0x80241508),
-                        unfocusedBorderColor = Color(0xFF261C09),
-                        focusedBorderColor = Color(0xFF261C09),
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(35.dp),
-                    label = {
-                        Text(
-                            text = stringResource(
-                                R.string.time
-                            ),
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 20.sp,
-                            fontFamily = poppinsFamily,
-                            color = Color.White
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                        .padding(top = 15.dp)
-                )
-                OutlinedTextField(
-                    value = porcoesState.value,
-                    onValueChange = { porcoesState.value = it},
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0x80241508),
-                        focusedContainerColor = Color(0x80241508),
-                        unfocusedBorderColor = Color(0xFF261C09),
-                        focusedBorderColor = Color(0xFF261C09),
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(35.dp),
-                    label = {
-                        Text(
-                            text = stringResource(
-                                R.string.porcoes
-                            ),
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 20.sp,
-                            fontFamily = poppinsFamily,
-                            color = Color.White
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                        .padding(top = 15.dp)
-                )
-                OutlinedTextField(
-                    value = levelState.value,
-                    onValueChange = { levelState.value = it },
+                    value = imageState.value,
+                    onValueChange = { imageState.value = it},
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = Color(0xFFFFD972),
                         focusedContainerColor = Color(0xFFFFD972),
@@ -336,7 +217,7 @@ fun CadastroReceita(
                     label = {
                         Text(
                             text = stringResource(
-                                R.string.dificulty_level
+                                R.string.image_receipe
                             ),
                             fontSize = 20.sp,
                             fontFamily = poppinsFamily,
@@ -344,20 +225,20 @@ fun CadastroReceita(
                             color = Color(0xFF261C09)
                         )
                     },
-                    trailingIcon = {
+                    leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
+                            imageVector = Icons.Default.Image,
                             contentDescription = "",
                             tint = Color(0xFF261C09),
                             modifier = Modifier
-                                .padding(end = 15.dp)
+                                .padding(start = 15.dp)
                                 .size(40.dp)
                         )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp)
-                        .padding(top = 15.dp)
+                        .padding(top = 20.dp)
                 )
                 DropdownMenu(
                     expanded = expandedDificuldade.value,
@@ -365,42 +246,43 @@ fun CadastroReceita(
                     modifier = Modifier
                         .background(Color(0xFFFFDF87))
                         .wrapContentWidth()
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Fácil") },
-                        onClick = { navegacao?.navigate("home") }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Médio") },
-                        onClick = { }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Difícil") },
-                        onClick = { navegacao?.navigate("cadastroReceita") }
-                    )
-                }
+                ) {}
                 Row(
                     modifier = Modifier
-                        .padding(top = 40.dp, end = 10.dp)
+                        .padding(horizontal = 10.dp, vertical = 20.dp)
+                        .fillMaxHeight()
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
                 ){
                     IconButton(
-                        onClick = {
-                            editor.putString("titulo", nameRecipeState.value)
-                            editor.putString("descricao", descriptionState.value)
-                            editor.putString("tempo_preparo", timeState.value)
-                            editor.putString("porcoes", porcoesState.value)
-                            editor.putString("id_nivel_dificuldade", levelState.value)
-                            editor.apply()
-                            navegacao?.navigate("cadastroIngrediente")
-                        }
+                        onClick = {navegacao?.navigate("cadastroIngredientes")}
                     ){
                         Icon(
-                            imageVector = Icons.Default.ArrowForward,
+                            imageVector = Icons.Default.ArrowBack,
                             contentDescription = "",
                             tint = Color(0xFF261C09),
                             modifier = Modifier.size(40.dp)
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            editor.putString("modo_preparo", preparationState.value)
+                            editor.putString("imagem", imageState.value)
+                            editor.apply()
+                            navegacao?.navigate("cadastroFinal")
+                        },
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(50.dp),
+                        colors = ButtonDefaults.buttonColors(Color(0xFFFFDF87))
+                    ){
+                        Text(
+                            text = stringResource(R.string.register),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = poppinsFamily,
+                            color = Color(0xFF261C09)
                         )
                     }
                 }
@@ -411,6 +293,6 @@ fun CadastroReceita(
 
 @Preview
 @Composable
-private fun CadastroReceitaPreview(){
-    CadastroReceita(null)
+private fun CadastroModoPreparoPreview(){
+    CadastroModoPreparo(null)
 }
