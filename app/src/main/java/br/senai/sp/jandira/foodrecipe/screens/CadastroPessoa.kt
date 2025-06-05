@@ -49,6 +49,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import br.senai.sp.jandira.foodrecipe.R
 import br.senai.sp.jandira.foodrecipe.model.ResponsePost
@@ -256,6 +257,7 @@ fun CadastroPessoa(
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp)
                             .padding(top = 25.dp)
+                            .zIndex(1f)
                     )
                     OutlinedTextField(
                         value = keywordState.value,
@@ -308,6 +310,7 @@ fun CadastroPessoa(
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp)
                             .padding(top = 25.dp)
+                            .zIndex(1f)
                     )
                     Button(
                         onClick = {

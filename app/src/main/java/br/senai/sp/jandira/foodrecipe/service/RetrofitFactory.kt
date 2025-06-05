@@ -8,7 +8,7 @@ class RetrofitFactory {
     // IP Mac- 10.107.144.11
     // IP Windows- 10.107.134.31
 
-    private val BASE_URL = "http://10.107.134.31:8080/v1/controle-receitas/"
+    private val BASE_URL = "http://10.107.144.3:8080/v1/controle-receitas/"
 
     private val RETROFIT_FACTORY = Retrofit
         .Builder()
@@ -23,7 +23,13 @@ class RetrofitFactory {
 
     fun getLevelService() : ReceipeService{
         return RETROFIT_FACTORY
-            .create(CharacterService::class.java)
+            .create(ReceipeService::class.java)
+        // Criar o serviço
+    }
+
+    fun getCategoryService() : ReceipeService{
+        return RETROFIT_FACTORY
+            .create(ReceipeService::class.java)
         // Criar o serviço
     }
 }
