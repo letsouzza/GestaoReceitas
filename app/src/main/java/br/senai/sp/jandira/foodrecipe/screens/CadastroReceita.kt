@@ -153,7 +153,7 @@ fun CadastroReceita(
                     ) {
                         DropdownMenuItem(
                             text = { Text("Home") },
-                            onClick = { navegacao?.navigate("home") }
+                            onClick = { navegacao?.navigate("home1") }
                         )
                         DropdownMenuItem(
                             text = { Text("Perfil") },

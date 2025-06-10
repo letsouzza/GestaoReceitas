@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.foodrecipe.screens
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -42,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -79,6 +81,10 @@ fun LoginPessoa(
     var passwordState = remember {
         mutableStateOf("")
     }
+
+    val context = LocalContext.current
+    val userFile = context.getSharedPreferences("user_file", Context.MODE_PRIVATE)
+    val editor = userFile.edit()
 
     Box(
         modifier = Modifier
@@ -245,6 +251,20 @@ fun LoginPessoa(
                                     response: Response<ResponsePost>
                                 ) {
                                     openAlertDialog.value = true
+//                                    if (response.isSuccessful) {
+//                                        val userId = response.body()?.id_usuario
+//                                        if (userId != null) {
+//                                            editor.putInt("user_id", userId)
+//                                            editor.apply() // Use apply() for async saving
+//                                            Toast.makeText(context, "User ID stored: $userId", Toast.LENGTH_SHORT).show()
+//                                        } else {
+//                                            Toast.makeText(context, "User ID not found in response", Toast.LENGTH_SHORT).show()
+//                                        }
+//                                        openAlertDialog.value = true
+//                                    } else {
+//                                        Toast.makeText(context, "Login failed: ${response.code()}", Toast.LENGTH_SHORT).show()
+//                                        Log.e("LoginPessoa", "Login failed: ${response.errorBody()?.string()}")
+//                                    }
                                 }
                                 override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
                                     Log.d("Erro" , "Erro")
@@ -268,7 +288,7 @@ fun LoginPessoa(
                     if (openAlertDialog.value) {
                         DialogWelcome(
                             onDismissRequest = { openAlertDialog.value = false },
-                            onNavigate = {navegacao?.navigate("cadastroReceita")},
+                            onNavigate = {navegacao?.navigate("home1")},
                             dialogTitle = "BEM VINDO!",
                             dialogText = "Este é o lugar ideal para aprender novas comidas, explorar sabores e descobrir dicas práticas para se destacar na cozinha.",
                             dialogTextSpecial = "Aproveite e inspire-se!",

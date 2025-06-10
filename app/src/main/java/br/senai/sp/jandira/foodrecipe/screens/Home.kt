@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,6 +24,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -35,7 +34,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -108,65 +106,55 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
                 ){
                     Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 12.dp, vertical = 5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .width(80.dp)
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
-                            painter = painterResource(
-                                R.drawable.logoblack
-                            ),
+                            painter = painterResource(R.drawable.logoblack),
                             contentDescription = "",
                             modifier = Modifier
-                                .fillMaxSize(),
-                            contentScale = ContentScale.Crop,
+                                .size(90.dp)
                         )
+                        Box {
+                            IconButton(
+                                onClick = { expandedMenu.value = !expandedMenu.value }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.List,
+                                    contentDescription = "",
+                                    tint = Color(0xFF261C09),
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = expandedMenu.value,
+                                onDismissRequest = { expandedMenu.value = false },
+                                modifier = Modifier
+                                    .background(Color(0xFFFFDF87))
+                                    .wrapContentWidth()
+                                    .align(Alignment.TopEnd) // Só funciona dentro BoxScope!
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Home") },
+                                    onClick = { navegacao?.navigate("home1") }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Perfil") },
+                                    onClick = { }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Cadastrar Receita") },
+                                    onClick = { navegacao?.navigate("cadastroReceita") }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Favoritas") },
+                                    onClick = { }
+                                )
+                            }
+                        }
                     }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight(),
-                        verticalArrangement = Arrangement.Center
-
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.List,
-                            contentDescription = "",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(50.dp)
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = expandedMenu.value,
-                        onDismissRequest = { expandedMenu.value = false },
-                        modifier = Modifier
-                            .background(Color(0xFFFFDF87))
-                            .wrapContentWidth()
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Home") },
-                            onClick = { navegacao?.navigate("home") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Perfil") },
-                            onClick = { }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Cadastrar Receita") },
-                            onClick = { navegacao?.navigate("cadastroReceita") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Favoritas") },
-                            onClick = { }
-                        )
-                    }
-                }
             }
             OutlinedTextField(
                 value = search.value, // Use the state variable directly
