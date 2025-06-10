@@ -1,6 +1,8 @@
 package br.senai.sp.jandira.foodrecipe.screens
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -48,9 +50,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import br.senai.sp.jandira.foodrecipe.R
+import br.senai.sp.jandira.foodrecipe.model.ReceitaRegister
+import br.senai.sp.jandira.foodrecipe.model.ResponsePost
+import br.senai.sp.jandira.foodrecipe.model.UserRegister
+import br.senai.sp.jandira.foodrecipe.service.RetrofitFactory
 import br.senai.sp.jandira.foodrecipe.ui.theme.podkovaFamily
 import br.senai.sp.jandira.foodrecipe.ui.theme.poppinsFamily
 import br.senai.sp.jandira.foodrecipe.ui.theme.rethinkFamily
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun CadastroModoPreparo(
@@ -68,7 +77,16 @@ fun CadastroModoPreparo(
 
     val context = LocalContext.current
     val userFile = context.getSharedPreferences("user_file", Context.MODE_PRIVATE)
-    val editor = userFile.edit()
+    val titulo = userFile.getString("titulo", "")
+    val ingredientes = userFile.getString("ingredientes", "")
+    val porcoes = userFile.getString("porcoes", "")
+    val tempo = userFile.getString("tempo_preparo", "")
+    val descricao = userFile.getString("descricao", "")
+    val nivel = userFile.getInt("id_nivel_dificuldade" , 1)
+
+    val categoriaString = userFile.getString("categoria", "") ?: ""
+    val categoriasList = categoriaString.split(",").map { it.trim() }
+
 
 
     Box(
@@ -240,13 +258,6 @@ fun CadastroModoPreparo(
                         .padding(horizontal = 10.dp)
                         .padding(top = 20.dp)
                 )
-                DropdownMenu(
-                    expanded = expandedDificuldade.value,
-                    onDismissRequest = { expandedDificuldade.value = false },
-                    modifier = Modifier
-                        .background(Color(0xFFFFDF87))
-                        .wrapContentWidth()
-                ) {}
                 Row(
                     modifier = Modifier
                         .padding(horizontal = 10.dp, vertical = 20.dp)
@@ -267,10 +278,50 @@ fun CadastroModoPreparo(
                     }
                     Button(
                         onClick = {
-                            editor.putString("modo_preparo", preparationState.value)
-                            editor.putString("imagem", imageState.value)
-                            editor.apply()
-                            navegacao?.navigate("cadastroFinal")
+
+                            val body = ReceitaRegister(
+                                titulo = "$titulo",
+                                descricao = "$descricao",
+                                modoPreparo = preparationState.value,
+                                imagem = imageState.value,
+                                ingredientes = "$ingredientes",
+                                tempo = "$tempo",
+                                porcoes = "$porcoes",
+                                idUser = 47,
+                                nivelDificuldade = nivel,
+                                categorias = categoriasList
+                            )
+                            Log.d("lara" , "$body")
+
+                            val sendReceita = RetrofitFactory()
+                                .getReceipeService()
+                                .insertReceita(body)
+
+                            sendReceita.enqueue(object : Callback<ResponsePost> {
+                                override fun onResponse(
+                                    call: Call<ResponsePost>,
+                                    response: Response<ResponsePost>
+                                ) {
+                                    if (response.isSuccessful) {
+                                        Toast.makeText(
+                                            context,
+                                            "Cadastro OK: ${response.body()?.message}",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        navegacao?.navigate("home")
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "Erro no servidor: código ${response.code()}",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                }
+
+                                override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
+                                    Log.e("Erro", "Não foi possível cadastrar")
+                                }
+                            })
                         },
                         modifier = Modifier
                             .width(150.dp)

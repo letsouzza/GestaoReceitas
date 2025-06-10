@@ -40,8 +40,7 @@ fun CardHome(
     img: String = "",
     texto1: String = "",
     texto2: String = "",
-    texto3: String = "",
-    icone: ImageVector,
+    texto3: String = ""
 ) {
     Card (
         modifier = Modifier
@@ -84,10 +83,8 @@ fun CardHome(
                 ) {
                     Card(
                         modifier = Modifier
-                            .padding(start = 10.dp)
-                            .size(85.dp),
-                        colors = CardDefaults.cardColors(Color.Magenta),
-                        shape = CircleShape
+                            .fillMaxSize(),
+                        colors = CardDefaults.cardColors(Color.Magenta)
                     ){
                         AsyncImage(
                             model = img,
@@ -155,6 +152,6 @@ fun CardHome(
 @Preview()
 @Composable
 private fun CardCoursesPreview(){
-//    CardHome(img = painterResource(id = R.drawable.logoblack), icone = )
+   CardHome()
 }
 

@@ -78,7 +78,6 @@ fun CadastroReceita(
     callLevel.enqueue(object : Callback<ResultLevel> {
         override fun onResponse(p0: Call<ResultLevel>, response: Response<ResultLevel>) {
             levelList = response.body()!!.nivel
-            Log.d("oi", "funcionou")
         }
 
         override fun onFailure(p0: Call<ResultLevel>, p1: Throwable) {

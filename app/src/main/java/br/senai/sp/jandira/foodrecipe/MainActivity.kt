@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             ){
                 composable(route = "login"){ LoginPessoa(navegacao)}
                 composable(route = "cadastro"){ CadastroPessoa(navegacao)}
-                composable(route = "home"){ HomeScreen(navegacao) }
+                composable(route = "home1"){ HomeScreen(navegacao) }
                 composable(route = "cadastroReceita"){ CadastroReceita(navegacao)}
                 composable(route = "cadastroIngrediente"){ CadastroIngrediente(navegacao)}
                 composable(route = "cadastroFinal"){ CadastroModoPreparo(navegacao) }

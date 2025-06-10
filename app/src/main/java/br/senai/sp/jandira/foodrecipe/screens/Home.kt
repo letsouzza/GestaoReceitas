@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.homereceita.screens
 
+import android.util.Log
 import androidx.compose.material.icons.filled.List
 import br.senai.sp.jandira.homereceita.screens.model.CardHome
 import androidx.compose.foundation.Image
@@ -42,18 +43,47 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import br.senai.sp.jandira.foodrecipe.R
+import br.senai.sp.jandira.foodrecipe.model.ReceitaList
+import br.senai.sp.jandira.foodrecipe.model.ResultReceita
+import br.senai.sp.jandira.foodrecipe.service.RetrofitFactory
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 @Composable
 fun HomeScreen(
     navegacao: NavHostController?
 ) {
-
     var search = remember {
         mutableStateOf("")
     }
 
     val expandedMenu = remember { mutableStateOf(false) }
+
+    var listaReceita = remember {
+        mutableStateOf(listOf<ReceitaList>())
+    }
+
+    // Obter um Retrofit Factory
+    var callReceita = RetrofitFactory()
+        .getReceipeService()
+        .mostrarReceita()
+    Log.d("teste" , "$listaReceita")
+
+    // Enviar a requisição
+    // enqueue- enviar
+    // Retorna um Result
+    callReceita.enqueue(object : Callback<ResultReceita>{
+        override fun onResponse(p0: Call<ResultReceita>, response: Response<ResultReceita>) {
+            listaReceita.value = response.body()!!.receitas
+        }
+
+        override fun onFailure(p0: Call<ResultReceita>, p1: Throwable) {
+            Log.d("erro" , "erro")
+            Log.d("teste1" , "$listaReceita")
+        }
+    })
 
     Box(
         modifier = Modifier
@@ -66,22 +96,21 @@ fun HomeScreen(
                     color = Color(0xff261C09)
                 ),
 
-            ) {
-            Column(
+            ){
+                Column(
                 modifier = Modifier
                     .height(110.dp)
                     .fillMaxWidth()
-
                     .background(
                         color = Color(0xffFFDF87)
                     ),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(
+                ){
+                    Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(start = 12.dp, end = 12.dp, top = 5.dp, bottom = 5.dp),
+                        .padding(horizontal = 12.dp, vertical = 5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(
@@ -119,7 +148,6 @@ fun HomeScreen(
                         modifier = Modifier
                             .background(Color(0xFFFFDF87))
                             .wrapContentWidth()
-//                            .align(Alignment.TopEnd) // Só funciona dentro BoxScope!
                     ) {
                         DropdownMenuItem(
                             text = { Text("Home") },
@@ -140,65 +168,64 @@ fun HomeScreen(
                     }
                 }
             }
-
-        }
-    }
-    OutlinedTextField(
-        value = search.value, // Use the state variable directly
-        onValueChange = { search.value = it },
-        modifier = Modifier
-            .padding(top = 20.dp, end = 20.dp, start = 20.dp)
-            .fillMaxWidth()
-            .height(60.dp),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Go
-        ),
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "",
-                tint = Color(0XFFF8D99E),
+            OutlinedTextField(
+                value = search.value, // Use the state variable directly
+                onValueChange = { search.value = it },
                 modifier = Modifier
-                    .size(40.dp)
+                    .padding(top = 20.dp, end = 20.dp, start = 20.dp)
+                    .fillMaxWidth()
+                    .height(50.dp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Go
+                ),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "",
+                        tint = Color(0XFFF8D99E),
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
+                },
+                shape = RoundedCornerShape(30.dp),
+                colors = OutlinedTextFieldDefaults.colors( // <-- Use OutlinedTextFieldDefaults.colors()
+                    focusedBorderColor = Color(0XFFF8D99E),
+                    unfocusedBorderColor = Color(0XFFF8D99E),
+                    focusedTextColor = Color(0XFFF8D99E),
+                    unfocusedTextColor = Color(0XFFF8D99E)
+                ),
+                label = {
+                    Text(
+                        text = "",
+                        color = Color(0XFF9E9FA4)
+                    )
+                }
             )
-        },
-        shape = RoundedCornerShape(30.dp),
-        colors = OutlinedTextFieldDefaults.colors( // <-- Use OutlinedTextFieldDefaults.colors()
-            focusedBorderColor = Color(0XFFF8D99E),
-            unfocusedBorderColor = Color(0XFFF8D99E),
-            focusedTextColor = Color(0XFFF8D99E),
-            unfocusedTextColor = Color(0XFFF8D99E)
-        ),
-        label = {
-            Text(
-                text = "",
-                color = Color(0XFF9E9FA4)
-            )
+            Column(
+                modifier = Modifier
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LazyColumn {
+                    Log.d("teste2" , "${listaReceita.value}")
+                    items(listaReceita.value){
+                        CardHome(
+                            img = it.imagem,
+                            texto1 = it.titulo,
+                            texto2 = it.descricao,
+                            texto3 = it.tempo
+                        )
+                    }
+                }
+            }
         }
-    )
-
-    Column(
-        modifier = Modifier
-            .padding(20.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-//        LazyColumn {
-//            items(characterList.value){
-//                CharacterCard(
-//                    name = it.name,
-//                    status = it.status,
-//                    specie = it.species,
-//                    image = it.image
-//                )
-//            }
-//        }
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
 private fun CoursesScreenPreview(){
-//    HomeScreen()
+    HomeScreen(null)
 }
