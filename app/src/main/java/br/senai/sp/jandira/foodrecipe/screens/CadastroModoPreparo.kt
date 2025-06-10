@@ -43,8 +43,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -60,15 +62,20 @@ import br.senai.sp.jandira.foodrecipe.R
 import br.senai.sp.jandira.foodrecipe.model.Categoria
 import br.senai.sp.jandira.foodrecipe.model.ReceitaRegister
 import br.senai.sp.jandira.foodrecipe.model.ResponsePost
-import br.senai.sp.jandira.foodrecipe.model.UserRegister
+import br.senai.sp.jandira.foodrecipe.service.AzureUploadService.uploadImageToAzure
 import br.senai.sp.jandira.foodrecipe.service.RetrofitFactory
 import br.senai.sp.jandira.foodrecipe.ui.theme.podkovaFamily
 import br.senai.sp.jandira.foodrecipe.ui.theme.poppinsFamily
 import br.senai.sp.jandira.foodrecipe.ui.theme.rethinkFamily
 import coil.compose.AsyncImage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 @Composable
 fun CadastroModoPreparo(
@@ -85,15 +92,17 @@ fun CadastroModoPreparo(
     }
 
 
-    val imageUri = remember { mutableStateOf<Uri?>(null) }
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            imageUri.value = it
-            imageState.value = it.toString()
+    // 1) Estado para armazenar o URI da imagem escolhida
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    // 2) Estado para armazenar a URL retornada pelo Azure
+    var imageUrl by remember { mutableStateOf<String?>(null) }
+
+    // 3) Launcher para pegar o arquivo via Galeria
+    val pickImageLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            imageUri = uri
         }
-    }
 
     val context = LocalContext.current
     val userFile = context.getSharedPreferences("user_file", Context.MODE_PRIVATE)
@@ -284,10 +293,10 @@ fun CadastroModoPreparo(
                             .padding(horizontal = 10.dp)
                             .padding(top = 20.dp)
                             .clickable {
-                                imagePickerLauncher.launch("image/*")
+                                pickImageLauncher.launch("image/*")
                             }
                     )
-                    imageUri.value?.let { uri ->
+                    imageUri?.let { uri ->
                         AsyncImage(
                             model = uri,
                             contentDescription = "Imagem Selecionada",
@@ -317,52 +326,68 @@ fun CadastroModoPreparo(
                         }
                         Button(
                             onClick = {
+                                // 1) Executa a rotina de upload em background
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    try {
+                                        // 2) Chama a sua função de upload e aguarda a URL
+                                        val urlRetornada = uploadImageToAzure(context, imageUri!!)
 
-                                val categoriasJsonList = categoriasList.map { Categoria(it) }
+                                        val categoriasJsonList = categoriasList.map { Categoria(it) }
 
-                                val body = ReceitaRegister(
-                                    titulo = "$titulo",
-                                    descricao = "$descricao",
-                                    modoPreparo = preparationState.value,
-                                    imagem = imageState.value,
-                                    ingredientes = "$ingredientes",
-                                    tempo = "$tempo",
-                                    porcoes = "$porcoes",
-                                    idUser = 47,
-                                    nivelDificuldade = nivel,
-                                    categoria = categoriasJsonList
-                                )
-                                Log.d("lara", "$body")
+                                        val body = ReceitaRegister(
+                                            titulo = "$titulo",
+                                            descricao = "$descricao",
+                                            modoPreparo = preparationState.value,
+                                            imagem = "$urlRetornada",
+                                            ingredientes = "$ingredientes",
+                                            tempo = "$tempo",
+                                            porcoes = "$porcoes",
+                                            idUser = 47,
+                                            nivelDificuldade = nivel,
+                                            categoria = categoriasJsonList
+                                        )
+                                        Log.d("lara", "$body")
 
-                                val sendReceita = RetrofitFactory()
-                                    .getReceipeService()
-                                    .insertReceita(body)
+                                        val sendReceita = RetrofitFactory()
+                                            .getReceipeService()
+                                            .insertReceita(body)
 
-                                sendReceita.enqueue(object : Callback<ResponsePost> {
-                                    override fun onResponse(
-                                        call: Call<ResponsePost>,
-                                        response: Response<ResponsePost>
-                                    ) {
-                                        if (response.isSuccessful) {
-                                            Toast.makeText(
-                                                context,
-                                                "Cadastro OK: ${response.body()?.message}",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                            navegacao?.navigate("home1")
-                                        } else {
-                                            Toast.makeText(
-                                                context,
-                                                "Erro no servidor: código ${response.code()}",
-                                                Toast.LENGTH_LONG
-                                            ).show()
+                                        sendReceita.enqueue(object : Callback<ResponsePost> {
+                                            override fun onResponse(
+                                                call: Call<ResponsePost>,
+                                                response: Response<ResponsePost>
+                                            ) {
+                                                if (response.isSuccessful) {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Cadastro OK: ${response.body()?.message}",
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
+                                                    navegacao?.navigate("home1")
+                                                } else {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Erro no servidor: código ${response.code()}",
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
+                                                }
+                                            }
+
+                                            override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
+                                                Log.e("Erro", "Não foi possível cadastrar")
+                                            }
+                                        })
+                                        // 3) Volta na Main e guarda a URL num estado para usar depois
+                                        withContext(Dispatchers.Main) {
+                                            imageUrl = urlRetornada
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.e("ExemploEnvio", "Falha no upload: ${e.message}")
+                                        withContext(Dispatchers.Main) {
+                                            Toast.makeText(context, "Erro no upload", Toast.LENGTH_SHORT).show()
                                         }
                                     }
-
-                                    override fun onFailure(p0: Call<ResponsePost>, p1: Throwable) {
-                                        Log.e("Erro", "Não foi possível cadastrar")
-                                    }
-                                })
+                                }
                             },
                             modifier = Modifier
                                 .width(150.dp)
@@ -383,6 +408,7 @@ fun CadastroModoPreparo(
         }
     }
 }
+
 
 @Preview
 @Composable

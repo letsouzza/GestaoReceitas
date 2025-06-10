@@ -72,4 +72,6 @@ dependencies {
 
     //Coil- Image
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    implementation ("com.squareup.okhttp3:okhttp:4.11.0")
 }
